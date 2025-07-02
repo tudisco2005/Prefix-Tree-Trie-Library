@@ -195,7 +195,7 @@ Prefix_Tree* initTree(char* text, char* split_char) {
     // split the text into array of strings based on the split_char
     char* word = strtok(text_copy, split_char);
     while (word != NULL) {
-        printf("Inserting word: %s\n", word);
+        //printf("Inserting word: %s\n", word);
         insertString(tree, word); // Insert the word into the tree
         word = strtok(NULL, split_char);
     }

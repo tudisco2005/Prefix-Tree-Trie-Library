@@ -2,35 +2,36 @@
 #include "prefix_tree.h"
 
 int main() {
-    // Inizializza l'albero
-    Prefix_Tree* tree = initTree("non lo so", WHITESPACE);
+    // Initialize the tree
+    Prefix_Tree* tree = initTree("I don't know what to enter", WHITESPACE);
     if (!tree) {
-        printf("Errore nell'inizializzazione dell'albero.\n");
+        printf("Error initializing the tree.\n");
         return 1;
     }
 
-    // Inserisci alcune stringhe
-    printf("added: %d nodes for %s\n", insertString(tree, "cane"), "cane");
-    printf("added: %d nodes for %s\n", insertString(tree, "cani"), "cani");
-    printf("added: %d nodes for %s\n", insertString(tree, "casa"), "casa");
-    printf("added: %d nodes for %s\n", insertString(tree, "gatto"), "gatto");
-    printf("added: %d nodes for %s\n", insertString(tree, "ciao"), "ciao");
+    // Insert some strings
+    printf("\nSingle insertions:\n");
+    printf("added: %d nodes for \"%s\"\n", insertString(tree, "dog"), "dog");
+    printf("added: %d nodes for \"%s\"\n", insertString(tree, "dogs"), "dogs");
+    printf("added: %d nodes for \"%s\"\n", insertString(tree, "house"), "house");
+    printf("added: %d nodes for \"%s\"\n", insertString(tree, "cat"), "cat");
+    printf("added: %d nodes for \"%s\"\n", insertString(tree, "hello"), "hello");
 
-    // Stampa l'albero
-    printf("Stampa dell'albero prefix dopo inserimenti:\n");
+    // Print the tree
+    printf("\nPrefix tree after insertions:\n");
     printTree(tree);
 
-    // ricerca
-    printf("Ricerca:\n");
-    printf(" - \"%s\" \t result: %s\n", "casa", lookup(tree, "casa") ? "True" : "False");
-    printf(" - \"%s\" \t result: %s\n", "gatto", lookup(tree, "gatto") ? "True" : "False");
-    printf(" - \"%s\" \t result: %s\n", "gatti", lookup(tree, "gatti") ? "True" : "False");
-    printf(" - \"%s\" \t result: %s\n", "cane", lookup(tree, "cane") ? "True" : "False");
-    printf(" - \"%s\" \t result: %s\n", "so", lookup(tree, "so") ? "True" : "False");
-    printf(" - \"%s\" \t result: %s\n", "gattara", lookup(tree, "gattara") ? "True" : "False");
+    // Search
+    printf("\nSearch:\n");
+    printf(" - \"%s\" \t result: %s\n", "house", lookup(tree, "house") ? "True" : "False");
+    printf(" - \"%s\" \t result: %s\n", "cat", lookup(tree, "cat") ? "True" : "False");
+    printf(" - \"%s\" \t result: %s\n", "cats", lookup(tree, "cats") ? "True" : "False");
+    printf(" - \"%s\" \t result: %s\n", "dog", lookup(tree, "dog") ? "True" : "False");
+    printf(" - \"%s\" \t result: %s\n", "know", lookup(tree, "know") ? "True" : "False");
+    printf(" - \"%s\" \t result: %s\n", "kitten", lookup(tree, "kitten") ? "True" : "False");
 
-    // eliminazione
-    printf("Eliminazione albero prefix\n");
+    // Deletion
+    printf("\nDeleting prefix tree\n");
     deleteTree(&tree);
     printTree(tree);
 
