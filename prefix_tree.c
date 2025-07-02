@@ -16,7 +16,6 @@ struct Prefix_Tree {
     Node* root;
 };
 
-
 Node* addNode(char value) {
     Node* newNode = NULL;
     if(!(newNode = (Node*) malloc(sizeof(Node)))) {
@@ -65,6 +64,7 @@ int insertString(Prefix_Tree* tree, char* text) {
     int str_index = 0;
     if (!text || (str_size = strlen(text)) == 0) {
         perror("The entering new string is not valid (not allocated or \"\")");
+        return 0;
     }
     
     int new_nodes_counter = 0;
@@ -73,12 +73,13 @@ int insertString(Prefix_Tree* tree, char* text) {
     while (text[str_index] != '\0') {
         bool found = false;
         //search if the first letter is already present for the first node
-        for (int i = 0; i<root->number_of_childs; i++) {
+        for (int i = 0; i < root->number_of_childs; i++) {
             if (root->child_nodes[i]->value == text[str_index]) {
-                // letter is alredy present
+                // letter is already present
                 found = true;
                 str_index += 1; 
                 root = root->child_nodes[i];
+                break; // Importante: esci dal ciclo una volta trovato
             }
         }
     
@@ -107,6 +108,34 @@ int insertString(Prefix_Tree* tree, char* text) {
     return new_nodes_counter;
 }
 
+bool deleteNode(Node** node) {
+    if (!(*node)) return true;
+
+    for (int i = 0; i < (*node)->number_of_childs; i++) {
+        deleteNode(&((*node)->child_nodes[i]));
+    }
+
+    free((*node)->child_nodes);
+    free(*node);
+    *node = NULL;
+    return true;
+}
+
+// return true if the deletion completed without problems
+bool deleteTree(Prefix_Tree** tree) {
+    if (!tree || !(*tree)) {
+        return true; // Non è un errore se è già NULL
+    }
+
+    if ((*tree)->root) {
+        deleteNode(&((*tree)->root));
+    }
+    
+    free(*tree);
+    *tree = NULL;
+    return true;
+}
+
 Prefix_Tree* initEmptyTree() {
     Prefix_Tree* tree = NULL;
     if (!(tree = (Prefix_Tree*) malloc(sizeof(Prefix_Tree)))) {
@@ -124,37 +153,32 @@ Prefix_Tree* initEmptyTree() {
     // the root node has no value
     tree->root->value = '\0';
     tree->root->number_of_childs = 0;
+    tree->root->child_nodes = NULL; // Inizializza a NULL
 
     return tree;
 }
 
-// Prefix_Tree* initTree(char* text, char* split_char) {
-    //Prefix_Tree* tree = initEmptyTree()
-    // split the text in to array of strings based on the split_char
-//}
-
-bool deleteNode(Node** node) {
-    if (!(*node)) return true;
-
-    for (int i = 0; i < (*node)->number_of_childs; i++) {
-        deleteNode(&((*node)->child_nodes[i]));
+Prefix_Tree* initTree(char* text, char* split_char) {
+    Prefix_Tree* tree = initEmptyTree();
+    
+    // Crea una copia della stringa perché strtok modifica l'originale
+    char* text_copy = malloc(strlen(text) + 1);
+    if (!text_copy) {
+        perror("Error allocating memory for text copy");
+        deleteTree(&tree);
+        return NULL;
     }
+    strcpy(text_copy, text);
 
-    free((*node)->child_nodes);
-    free(*node);
-    *node = NULL;
-    return true;
+    // split the text into array of strings based on the split_char
+    char* word = strtok(text_copy, split_char);
+    while (word != NULL) {
+        printf("Inserting word: %s\n", word);
+        insertString(tree, word); // Inserisci la parola nell'albero
+        word = strtok(NULL, split_char);
+    }
+    
+    free(text_copy); // Libera la memoria della copia
+    return tree;
 }
 
-// return true if the deletion completed without problems
-bool deleteTree(Prefix_Tree** tree) {
-    if (!tree || !(*tree) || !(*tree)->root) {
-        perror("the tree is not valid for deletion (NULL value)");
-        return false;
-    }
-
-    deleteNode(&((*tree)->root));
-    free(*tree);
-    *tree = NULL;
-    return true;
-}

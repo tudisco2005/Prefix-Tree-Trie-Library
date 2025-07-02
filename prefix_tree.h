@@ -7,6 +7,8 @@
 extern "C" {
 #endif
 
+#define WHITESPACE " \t\n\r"
+
 // Struttura nodo dell'albero prefisso
 typedef struct Node {
     char value;
@@ -33,6 +35,7 @@ int insertString(Prefix_Tree* tree, char* text);
 
 // Inizializza un albero prefisso vuoto
 Prefix_Tree* initEmptyTree();
+Prefix_Tree* initTree(char* text, char* split_char);
 
 // delete tree
 bool deleteNode(Node** node);
