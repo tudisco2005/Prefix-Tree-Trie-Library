@@ -25,9 +25,8 @@ typedef struct Prefix_Tree {
 Node* addNode(char value);
 
 // Stampa ricorsivamente un nodo (funzione interna)
-void printNode(Node* node, int depth);
-
-// Stampa l'albero prefisso
+void printNodeHelper(Node* node, int depth, int* has_more_siblings);
+void printNode(Node* node, int depth, int is_last);
 void printTree(Prefix_Tree* tree);
 
 // Inserisce una stringa nell'albero prefisso
@@ -41,6 +40,8 @@ Prefix_Tree* initTree(char* text, char* split_char);
 bool deleteNode(Node** node);
 bool deleteTree(Prefix_Tree** tree);
 
+// lookup 
+bool lookup(Prefix_Tree* tree, char* search_query);
 
 #ifdef __cplusplus
 }

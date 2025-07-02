@@ -30,13 +30,44 @@ Node* addNode(char value) {
     return newNode;
 }
 
-void printNode(Node* node, int depth) {
+void printNodeHelper(Node* node, int depth, int* has_more_siblings) {
     if (!node) return;
     for (int i = 0; i < node->number_of_childs; i++) {
-        for (int d = 0; d < depth; d++) printf("    ");
-        printf("|->'%c'\n", node->child_nodes[i]->value);
-        printNode(node->child_nodes[i], depth + 1);
+        // Print indentation for current depth
+        for (int d = 0; d < depth; d++) {
+            if (has_more_siblings[d]) {
+                printf(" |   ");
+            } else {
+                printf("     ");
+            }
+        }
+        
+        // Print the connector and character
+        printf(" +-- '%c'\n", node->child_nodes[i]->value);
+        
+        // Update the has_more_siblings array for the next depth level
+        has_more_siblings[depth] = (i < node->number_of_childs - 1);
+        
+        // Recursively print child nodes
+        printNodeHelper(node->child_nodes[i], depth + 1, has_more_siblings);
+        
+        // Add vertical line between siblings at the same depth (except after the last one)
+        if (i < node->number_of_childs - 1) {
+            for (int d = 0; d < depth; d++) {
+                if (has_more_siblings[d]) {
+                    printf(" |   ");
+                } else {
+                    printf("     ");
+                }
+            }
+            printf(" |\n");
+        }
     }
+}
+
+void printNode(Node* node, int depth, int is_last) {
+    int has_more_siblings[100] = {0}; // Assuming max depth of 100
+    printNodeHelper(node, depth, has_more_siblings);
 }
 
 void printTree(Prefix_Tree* tree) {
@@ -44,10 +75,11 @@ void printTree(Prefix_Tree* tree) {
         printf("(empty tree)\n");
         return;
     }
-    printf("root\n");
-    printNode(tree->root, 1);
+    
+    printf("<root>\n");
+    printNode(tree->root, 0, 1);
+    printf("\n");
 }
-
 // return the number of new nodes added
 int insertString(Prefix_Tree* tree, char* text) {
     if (!tree) {
@@ -182,3 +214,39 @@ Prefix_Tree* initTree(char* text, char* split_char) {
     return tree;
 }
 
+bool lookup(Prefix_Tree* tree, char* search_query) {
+    if (!tree) {
+        perror("Tree is not valid (not allocated or NULL)");
+        return false;
+    }
+
+    if (!tree->root) {
+        perror("Tree root node is not valid (not allocated or NULL)");
+        return false;
+    }
+    
+    int str_size = 0;
+    int str_index = 0;
+    if (!search_query || (str_size = strlen(search_query)) == 0) {
+        perror("The search query is not valid (not allocated or \"\")");
+        return false;
+    }
+
+    Node* root = tree->root;
+    bool found = false;
+
+    while (search_query[str_index] != '\0') {
+        found = false;
+        for (int i = 0; i < root->number_of_childs; i++) {
+            if (root->child_nodes[i]->value == search_query[str_index]) {
+                str_index += 1;
+                found = true;
+                root = root->child_nodes[i];
+                break;
+            }
+        }
+        if (!found) return false;
+    }
+
+    return true;
+}

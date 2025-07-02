@@ -20,7 +20,16 @@ int main() {
     printf("Stampa dell'albero prefix dopo inserimenti:\n");
     printTree(tree);
 
+    // ricerca
+    printf("Ricerca:\n");
+    printf(" - \"%s\" \t result: %s\n", "casa", lookup(tree, "casa") ? "True" : "False");
+    printf(" - \"%s\" \t result: %s\n", "gatto", lookup(tree, "gatto") ? "True" : "False");
+    printf(" - \"%s\" \t result: %s\n", "gatti", lookup(tree, "gatti") ? "True" : "False");
+    printf(" - \"%s\" \t result: %s\n", "cane", lookup(tree, "cane") ? "True" : "False");
+    printf(" - \"%s\" \t result: %s\n", "so", lookup(tree, "so") ? "True" : "False");
+    printf(" - \"%s\" \t result: %s\n", "gattara", lookup(tree, "gattara") ? "True" : "False");
 
+    // eliminazione
     printf("Eliminazione albero prefix\n");
     deleteTree(&tree);
     printTree(tree);
