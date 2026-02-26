@@ -1,6 +1,6 @@
 # Basic Prefix Tree (Trie) Library
 
-This project provides a simple and efficient implementation of a prefix tree (trie) in C. The library allows you to store, search, and manage collections of strings with shared prefixes, making it ideal for applications such as autocomplete, spell checking, and dictionary management.
+This project provides a simple implementation of a prefix tree (trie) in C. The library allows you to store, search, and manage collections of strings with shared prefixes, making it ideal for applications such as autocomplete, spell checking, and dictionary management.
 
 ## Features
 - Insert strings into the prefix tree
